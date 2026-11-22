@@ -13,7 +13,7 @@ templates = Jinja2Templates(directory=ROOT / 'app' / 'templates')
 LOCAL = ZoneInfo(ZONE)
 MODULES = (
     ('intake', '闸机采信'), ('clock', '时钟偏移'), ('pairing', '双束配对'), ('direction', '方向与折返'),
-    ('transfer', '换乘去重'), ('balance', '客流勾稽'), ('report', '班报复算'),
+    ('transfer', '换乘去重'), ('balance', '客流勾稽'), ('release', '放行补偿'), ('report', '班报复算'),
 )
 
 

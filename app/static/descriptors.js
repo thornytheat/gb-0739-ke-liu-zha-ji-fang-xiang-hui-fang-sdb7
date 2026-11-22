@@ -51,5 +51,16 @@ export const sections = {
     sources: ['源行勾稽', [source, ['logical_rows', '源逻辑行', 'number'], ['headers', '表头', 'number'],
       ['blanks', '空行', 'number'], ['accepted', '采信', 'number'], ['isolated', '隔离', 'number'], ['difference', '差异', 'number']]],
   },
+  release: {
+    main: ['班次补偿', [['shift', '班次'], station, ['label', '放行方向'], ['gate', '闸机已记', 'number'],
+      ['released', '人工放行', 'number'], ['offset', '重复抵掉', 'number'], ['net', '净补偿', 'number'],
+      ['pending', '待核对', 'number'], ['verified', '已核对', 'number'], ['reported', '发布口径', 'number'],
+      ['prospective', '全核口径', 'number'], ['batches', '批次', 'number'], ['marks', '标记']]],
+    batches: ['放行批次', [['batch', '批次键'], ['version', '版', 'number'], station, ['label', '方向'],
+      ['start_ms', '窗口起', 'ms'], ['end_ms', '窗口止', 'ms'], ['released', '人工放行', 'number'],
+      ['offset', '重复抵掉', 'number'], ['net', '净补偿', 'number'], ['status_label', '状态'], ['marks', '标记'],
+      ['entered_by', '录入人'], ['entered_at', '录入时间'], ['verifier', '核对人'], ['note', '备注'], original]],
+    history: ['发布记录', [['ledger_id', '账版'], ['published_at', '时间'], ['result_label', '结果'], ['detail', '说明']]],
+  },
   report: {main: ['输入清单', [source, ['sha256', 'SHA-256'], ['bytes', '字节', 'number']]], isolated},
 };

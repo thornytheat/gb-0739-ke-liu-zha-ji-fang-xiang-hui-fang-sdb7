@@ -13,6 +13,7 @@
 | M5 换乘去重 | 复核票有效期、通道和出站锚点 | `GET /api/transfer/{run_id}` | `app/modules/m5_transfer/contracts.py` `app/modules/m5_transfer/service.py` | `tests/test_transfer.py` |
 | M6 客流勾稽 | 核对逐站逐班源行、触发与客流 | `GET /api/balance/{run_id}` | `app/modules/m6_balance/shifts.py` `app/modules/m6_balance/service.py` | `tests/test_balance.py` |
 | M7 班报复算 | 核对输入哈希及原始依据，下载班报 | `GET /api/report/{run_id}`、`GET /api/report/{run_id}/export` | `app/modules/m7_report/bundle.py` `app/modules/m7_report/serializers.py` | `tests/test_report.py` |
+| M8 放行补偿 | 补录人工放行、核对、作废与发布补偿账 | `GET /api/releases/{run_id}`、`POST /api/releases/{run_id}/batches`、`.../verify`、`.../void`、`POST /api/releases/{run_id}/publish` | `app/modules/m8_release/model.py` `app/modules/m8_release/service.py` `app/modules/m8_release/store.py` | `tests/test_release.py` |
 
 ## 陷阱登记
 
@@ -35,3 +36,7 @@
 ## 勾稽与回放边界
 
 逐站逐班核对触发、配对证据、孤脉冲、重复、进出、换乘净数及去重进站。逐脉冲唯一归属也必须满足。文件按逻辑行勾稽，偏移缺失与重叠单列。原始快照和结果同一事务发布，同源并发只建立一条批次，历史重跑只复用历史批次。受输入边界约束，缺前置或后续脉冲按孤脉冲保留，缺换乘锚点保留独立进站。
+
+## 人工放行补偿边界
+
+故障窗口内的人工放行与闸机记录天然混杂，补偿账按站、班次、放行方向单列：重复抵掉只认窗口内同站同向的有效进出，净补偿 = 放行 − 抵掉。正式班报只含闸机核实数，未核对人工记数不改写班报（审计侧约束），待核对净补实时入账页供交班补足（交班侧影响可追溯）。同站同向窗口重叠、抵掉超过放行、站点不在本批记录，三者阻断发布；失败保留旧发布版并记录失败尝试。批次键幂等：同内容复用、异内容升版取代、核对不沿用到新版、作废留痕；重跑同源输入复用同一回放批次，补偿账不重复累计。原始报文、历史版本与发布记录全部保留。

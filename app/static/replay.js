@@ -123,8 +123,10 @@ function switchSection(module, initialView = 'main', term = '') {
 function openEvidence(module, initialView, term) {
   history.replaceState(null, '', `#${module}`);
   switchSection(module, initialView, term);
-  $('#proof').scrollIntoView({block: 'nearest'});
+  (module === 'release' ? $('#release-ops') : $('#proof')).scrollIntoView({block: 'nearest'});
 }
+
+document.addEventListener('release-changed', () => { if (active === 'release') load(); });
 
 for (const link of document.querySelectorAll('[data-module]')) {
   link.addEventListener('click', event => {

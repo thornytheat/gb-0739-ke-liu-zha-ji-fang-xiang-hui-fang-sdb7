@@ -28,4 +28,8 @@ MESSAGES = {
     'PASS_EXPIRED': '进站时刻在票有效期外', 'NO_TICKET': '缺票号，保留独立进站',
     'NO_ELIGIBLE_EXIT': '没有可用的有向出站锚点', 'TRANSFER': '已关联跨站出站锚点',
     'RUN_NOT_FOUND': '未找到回放批次', 'UNKNOWN_VIEW': '证据视图不存在', 'BALANCE_FAILED': '客流勾稽失败',
+    'BAD_DIRECTION': '放行方向须为 entry 或 exit', 'BAD_TEXT': '文本须为 1–64 字',
+    'BATCH_NOT_FOUND': '未找到放行批次', 'BATCH_INACTIVE': '批次已作废，请重新补录',
+    'SAMPLE_READONLY': '样例预览为只读，请先发布回放批次',
+    'LEDGER_FAILED': '补偿账勾稽失败，已保留上一发布版',
 }

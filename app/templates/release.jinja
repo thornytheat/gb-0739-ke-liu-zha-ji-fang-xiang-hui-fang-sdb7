@@ -1,0 +1,57 @@
+<section class="panel" id="release-ops" aria-labelledby="release-ops-title">
+  <div class="section-head">
+    <h2 id="release-ops-title">人工放行补偿账</h2>
+    <span id="release-state" class="signal idle">读取中…</span>
+    <a class="scope" href="#release" data-module="release" data-view="batches">放行批次原始记录</a>
+  </div>
+  <div class="release-body">
+    <p class="release-note">闸机故障期间的人工放行在此单独立账：正式班报只含闸机核实数，未核对人工记数不改写班报；重复抵掉窗口内已刷卡过闸的人数，净补偿经核对后入发布口径。待核对净补实时可见，交班无需等待即可补足人数。</p>
+    <div class="release-metrics" aria-label="补偿汇总">
+      <span>人工放行 <strong id="release-released" class="num">0</strong></span>
+      <span>重复抵掉 <strong id="release-offset" class="num">0</strong></span>
+      <span>待核对净补 <strong id="release-pending" class="num">0</strong></span>
+      <span>已核对净补 <strong id="release-verified" class="num">0</strong></span>
+    </div>
+    <div class="commands">
+      <button class="button" id="release-enter-open" type="button">补录批次</button>
+      <button class="button" id="release-verify-open" type="button">核对批次</button>
+      <button class="button" id="release-void-open" type="button">作废批次</button>
+      <button class="button primary" id="release-publish" type="button">发布补偿账</button>
+      <output id="release-feedback" aria-live="polite"></output>
+    </div>
+  </div>
+</section>
+<dialog id="release-enter" aria-labelledby="release-enter-title">
+  <div class="section-head"><h2 id="release-enter-title">补录人工放行批次</h2><button class="button plain" id="release-enter-close" type="button">关闭</button></div>
+  <form id="release-enter-form" class="dialog-form">
+    <label for="release-batch">批次键</label><input id="release-batch" name="batch" required maxlength="64" pattern="[A-Za-z0-9][A-Za-z0-9_\-]*" title="英文或数字开头，可含连字符和下划线" placeholder="如 REL-NTH-01">
+    <label for="release-station">站点</label><select id="release-station" name="station" required>{% for station in stations %}<option>{{ station }}</option>{% endfor %}</select>
+    <label for="release-direction">放行方向</label><select id="release-direction" name="direction"><option value="entry">进站放行</option><option value="exit">出站放行</option></select>
+    <label for="release-start">故障窗口起</label><input id="release-start" name="start" type="datetime-local" step="1" required>
+    <label for="release-end">故障窗口止</label><input id="release-end" name="end" type="datetime-local" step="1" required>
+    <label for="release-count">人工放行人数</label><input id="release-count" name="released" type="number" min="1" max="999999" required>
+    <label for="release-by">录入人</label><input id="release-by" name="entered_by" required maxlength="64">
+    <label for="release-note">备注</label><input id="release-note" name="note" maxlength="64">
+    <output id="release-enter-feedback" aria-live="polite"></output>
+    <button class="button primary" type="submit">补录（同键同内容复用，不重复累计）</button>
+  </form>
+</dialog>
+<dialog id="release-verify" aria-labelledby="release-verify-title">
+  <div class="section-head"><h2 id="release-verify-title">核对放行批次</h2><button class="button plain" id="release-verify-close" type="button">关闭</button></div>
+  <form id="release-verify-form" class="dialog-form">
+    <label for="release-verify-batch">批次键</label><input id="release-verify-batch" name="batch" required maxlength="64">
+    <label for="release-verifier">核对人</label><input id="release-verifier" name="verifier" required maxlength="64">
+    <label for="release-verify-note">核对说明</label><input id="release-verify-note" name="note" maxlength="64">
+    <output id="release-verify-feedback" aria-live="polite"></output>
+    <button class="button primary" type="submit">确认核对（仅当前版本生效）</button>
+  </form>
+</dialog>
+<dialog id="release-void" aria-labelledby="release-void-title">
+  <div class="section-head"><h2 id="release-void-title">作废放行批次</h2><button class="button plain" id="release-void-close" type="button">关闭</button></div>
+  <form id="release-void-form" class="dialog-form">
+    <label for="release-void-batch">批次键</label><input id="release-void-batch" name="batch" required maxlength="64">
+    <label for="release-void-note">作废原因</label><input id="release-void-note" name="note" required maxlength="64">
+    <output id="release-void-feedback" aria-live="polite"></output>
+    <button class="button primary" type="submit">作废（记录保留，不计入补偿）</button>
+  </form>
+</dialog>

@@ -28,8 +28,11 @@ python -m pytest -q
 | 方向与折返 | A→B、B→A、折返和等时歧义 | `GET /api/direction/{run_id}` |
 | 换乘去重 | 有向通道、时距、凭证与出站锚点 | `GET /api/transfer/{run_id}` |
 | 客流勾稽 | 同站同班的脉冲解释、进出量和换乘净数 | `GET /api/balance/{run_id}` |
+| 放行补偿 | 人工放行批次、重复抵掉、待核对与已核对净补 | `GET /api/releases/{run_id}` |
 | 班报复算 | 输入清单、隔离与取证 ZIP | `GET /api/report/{run_id}` |
 
 模块查询可用 `sample` 预览，提供 `view`、`q`、`station`、`offset`、`limit`。发布样例用 `POST /api/runs/sample`，上传用 `POST /api/runs`，重跑用 `POST /api/runs/{run_id}/rerun`，导出用 `GET /api/report/{run_id}/export`。接口定义在 `/docs`。
+
+闸机故障期间的人工放行在「放行补偿」单独立账：`POST /api/releases/{run_id}/batches` 补录（同批次键同内容复用，异内容升版，不重复累计），`POST /api/releases/{run_id}/batches/{batch}/verify` 核对、`.../void` 作废，`POST /api/releases/{run_id}/publish` 勾稽发布（失败保留旧版并记录原因）。正式班报只含闸机核实数，未核对人工记数不改写班报，待核对净补在账内实时可见。口径与留痕规则见[数据字典](docs/DATA-DICTIONARY.md)。
 
 同计算版本、阈值与原始文件字节复用同一批次，输入变化形成新批次。每份文件限 512 KiB 及 12,000 个逻辑行。本服务回放单批离线报表。脉冲及换乘所需的前后记录必须在同次输入中，自定义报告班次与实时硬件接入不在本次范围。

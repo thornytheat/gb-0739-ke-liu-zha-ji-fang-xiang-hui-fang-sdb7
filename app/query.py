@@ -36,7 +36,8 @@ class QueryRows:
             return False
         if not self.q:
             return True
-        keys = ('pulse', 'station', 'gate', 'ticket', 'code', 'key', 'encounter', 'anchor', 'from_station', 'to_station', 'source', 'shift')
+        keys = ('pulse', 'station', 'gate', 'ticket', 'code', 'key', 'encounter', 'anchor', 'from_station', 'to_station',
+                'source', 'shift', 'batch', 'ledger_id')
         candidates = [str(row[key]) for key in keys if row.get(key) is not None]
         candidates += row.get('raw', [])
         candidates += [pulse['pulse'] for pulse in row.get('pulses', [])]
